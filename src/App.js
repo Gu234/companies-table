@@ -61,6 +61,15 @@ class App extends Component {
     }
   }
 
+  getSortingFunction() {
+    return (companyA, companyB) => companyA.id - companyB.id
+  }
+
+  sortedCompanies() {
+    const companies = [...this.state.companies]
+    return companies.sort(this.getSortingFunction())
+  }
+
   render() {
     return (
       <>
@@ -74,7 +83,7 @@ class App extends Component {
             <th>Last month income</th>
           </thead>
           <tbody>
-            {this.state.companies.map(company =>
+            {this.sortedCompanies().map(company =>
               <CompanyRow company={company} key={company.id} />
             )}
           </tbody>
