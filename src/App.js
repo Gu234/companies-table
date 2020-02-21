@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import CompanyRow from './CompanyRow'
+import ColumnHeader from './ColumnHeader'
 import './App.css';
 
 function calculateTotalIncome(incomes) {
@@ -31,7 +32,9 @@ function isDateFromLastMonth(date) {
 class App extends Component {
   state = {
     dataFetched: false,
-    companies: []
+    companies: [],
+    sortKey: 'id',
+    sortOrder: 'ascending'
   }
 
   async componentDidMount() {
@@ -70,17 +73,47 @@ class App extends Component {
     return companies.sort(this.getSortingFunction())
   }
 
+  // changeSorting() {
+
+  // }
+
   render() {
+    const { sortKey, sortOrder } = this.state
+
     return (
       <>
         <table>
           <thead>
-            <th>Id</th>
-            <th>Name</th>
-            <th>City</th>
-            <th>Total Income</th>
-            <th>Average Income</th>
-            <th>Last month income</th>
+            <ColumnHeader
+              columnKey='id'
+              onClick={this.changeSorting}
+              sortKey={sortKey}
+              sortOrder={sortOrder}>Id</ColumnHeader>
+            <ColumnHeader
+              columnKey='name'
+              onClick={this.changeSorting}
+              sortKey={sortKey}
+              sortOrder={sortOrder}>Name</ColumnHeader>
+            <ColumnHeader
+              columnKey='city'
+              onClick={this.changeSorting}
+              sortKey={sortKey}
+              sortOrder={sortOrder}>City</ColumnHeader>
+            <ColumnHeader
+              columnKey='totalIncome'
+              onClick={this.changeSorting}
+              sortKey={sortKey}
+              sortOrder={sortOrder}>Total Income</ColumnHeader>
+            <ColumnHeader
+              columnKey='averageIncome'
+              onClick={this.changeSorting}
+              sortKey={sortKey}
+              sortOrder={sortOrder}>Average Income</ColumnHeader>
+            <ColumnHeader
+              columnKey='lastMonthIncome'
+              onClick={this.changeSorting}
+              sortKey={sortKey}
+              sortOrder={sortOrder}>Last month income</ColumnHeader>
           </thead>
           <tbody>
             {this.sortedCompanies().map(company =>
