@@ -1,23 +1,8 @@
 import React, { Component } from 'react';
+import CompanyRow from './CompanyRow'
 import './App.css';
 
-// fetch('https://recruitment.hal.skygate.io/companies')
-//   .then((response) => {
-//     return response.json();
-//   })
-//   .then((myJson) => {
-//     console.log(myJson);
-//   });
-
-// fetch('https://recruitment.hal.skygate.io/incomes/1')
-//   .then((response) => {
-//     return response.json();
-//   })
-//   .then((myJson) => {
-//     console.log(myJson);
-//   });
 class App extends Component {
-
   state = {
     dataFetched: false,
     companies: []
@@ -38,12 +23,7 @@ class App extends Component {
       companies.forEach((company, index) => company.incomes = incomes[index].incomes)
       console.log('companies = ', companies)
       this.setState({ companies, dataFetched: true })
-      console.log('after set state');
     }
-  }
-
-  companiesWithIncomes() {
-    return this.state.companies
   }
 
   render() {
@@ -59,15 +39,8 @@ class App extends Component {
             <th>Last month income</th>
           </thead>
           <tbody>
-            {this.companiesWithIncomes().map(company =>
-              <tr key={company.id}>
-                <td>{company.id}</td>
-                <td>{company.name}</td>
-                <td>{company.city}</td>
-                <td>{company.totalIncome}</td>
-                <td>{company.avarageIncome}</td>
-                <td>{company.lastMontIncome}</td>
-              </tr>
+            {this.state.companies.map(company =>
+              <CompanyRow company={company} key={company.id} />
             )}
           </tbody>
         </table>
