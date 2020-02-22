@@ -39,7 +39,6 @@ class App extends Component {
 
   async componentDidMount() {
     if (!this.state.dataFetched) {
-
       const response = await fetch('https://recruitment.hal.skygate.io/companies')
 
       const companies = await response.json()
@@ -65,7 +64,20 @@ class App extends Component {
   }
 
   getSortingFunction() {
-    return (companyA, companyB) => companyA.id - companyB.id
+    const sortKey = this.state.sortKey
+
+    if (sortKey === 'city' || sortKey === 'name') {
+      return (companyA, companyB) => {
+        if (companyA[sortKey] < companyB[sortKey]
+        )
+          return -1
+        else
+          return 1
+      }
+    }
+
+    else
+      return (companyA, companyB) => companyA[sortKey] - companyB[sortKey]
   }
 
   sortedCompanies() {
@@ -73,9 +85,18 @@ class App extends Component {
     return companies.sort(this.getSortingFunction())
   }
 
-  // changeSorting() {
+  changeSorting = (columnKey) => {
 
-  // }
+    // const newSortOrder = {
+    //   'ascending':'descending',
+    //   'descending':'ascending',
+    // }
+
+    if (this.state.sortKey === columnKey)
+      this.setState({ sortOrder: this.state.sortOrder === 'ascending' ? 'descending' : 'ascending' })
+    else
+      this.setState({ sortKey: columnKey })
+  }
 
   render() {
     const { sortKey, sortOrder } = this.state
