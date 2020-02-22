@@ -64,20 +64,25 @@ class App extends Component {
   }
 
   getSortingFunction() {
-    const sortKey = this.state.sortKey
+    const { sortKey, sortOrder } = this.state
+
+    const newSortOrder = {
+      'ascending': 1,
+      'descending': -1
+    }
 
     if (sortKey === 'city' || sortKey === 'name') {
       return (companyA, companyB) => {
         if (companyA[sortKey] < companyB[sortKey]
         )
-          return -1
+          return -1 * newSortOrder[sortOrder]
         else
-          return 1
+          return 1 * newSortOrder[sortOrder]
       }
     }
 
     else
-      return (companyA, companyB) => companyA[sortKey] - companyB[sortKey]
+      return (companyA, companyB) => (companyA[sortKey] - companyB[sortKey]) * newSortOrder[sortOrder]
   }
 
   sortedCompanies() {
