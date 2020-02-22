@@ -33,6 +33,8 @@ class App extends Component {
   state = {
     dataFetched: false,
     companies: [],
+    rowsPerPage: 20,
+    currentPage: 0,
     sortKey: 'id',
     sortOrder: 'ascending'
   }
@@ -91,7 +93,7 @@ class App extends Component {
   }
 
   changeSorting = (columnKey) => {
-
+    this.setState({ currentPage: 0 })
     // const newSortOrder = {
     //   'ascending':'descending',
     //   'descending':'ascending',
@@ -103,50 +105,90 @@ class App extends Component {
       this.setState({ sortKey: columnKey })
   }
 
+  changePage = (e) => {
+    console.log(e);
+
+    this.setState({ currentPage: Number(e.target.dataset.indexNumber) })
+  }
+
+  isRowForCurrentPage = (_, index) => {
+
+    const { currentPage, rowsPerPage } = this.state
+    if (index >= currentPage * rowsPerPage && index < currentPage * rowsPerPage + rowsPerPage)
+      return true
+    else
+      return false
+  }
+
+  goToNextPage = () => {
+    const { currentPage } = this.state
+    const lastPage = Math.ceil(this.state.companies.length / this.state.rowsPerPage) - 1
+
+    if (currentPage === lastPage) return
+    this.setState({ currentPage: currentPage + 1 })
+  }
+
+  goToPreviousPage = () => {
+    const { currentPage } = this.state
+    if (currentPage === 0) return
+    this.setState({ currentPage: currentPage - 1 })
+  }
   render() {
     const { sortKey, sortOrder } = this.state
+    const numberOfPaginationButtons = Math.ceil(this.state.companies.length / this.state.rowsPerPage)
+    const paginationsButtons = new Array(numberOfPaginationButtons).fill(true)
 
     return (
       <>
         <table>
-          <thead>
-            <ColumnHeader
-              columnKey='id'
-              onClick={this.changeSorting}
-              sortKey={sortKey}
-              sortOrder={sortOrder}>Id</ColumnHeader>
-            <ColumnHeader
-              columnKey='name'
-              onClick={this.changeSorting}
-              sortKey={sortKey}
-              sortOrder={sortOrder}>Name</ColumnHeader>
-            <ColumnHeader
-              columnKey='city'
-              onClick={this.changeSorting}
-              sortKey={sortKey}
-              sortOrder={sortOrder}>City</ColumnHeader>
-            <ColumnHeader
-              columnKey='totalIncome'
-              onClick={this.changeSorting}
-              sortKey={sortKey}
-              sortOrder={sortOrder}>Total Income</ColumnHeader>
-            <ColumnHeader
-              columnKey='averageIncome'
-              onClick={this.changeSorting}
-              sortKey={sortKey}
-              sortOrder={sortOrder}>Average Income</ColumnHeader>
-            <ColumnHeader
-              columnKey='lastMonthIncome'
-              onClick={this.changeSorting}
-              sortKey={sortKey}
-              sortOrder={sortOrder}>Last month income</ColumnHeader>
-          </thead>
+          {/* <thead> */}
+          <ColumnHeader
+            columnKey='id'
+            onClick={this.changeSorting}
+            sortKey={sortKey}
+            sortOrder={sortOrder}>Id</ColumnHeader>
+          <ColumnHeader
+            columnKey='name'
+            onClick={this.changeSorting}
+            sortKey={sortKey}
+            sortOrder={sortOrder}>Name</ColumnHeader>
+          <ColumnHeader
+            columnKey='city'
+            onClick={this.changeSorting}
+            sortKey={sortKey}
+            sortOrder={sortOrder}>City</ColumnHeader>
+          <ColumnHeader
+            columnKey='totalIncome'
+            onClick={this.changeSorting}
+            sortKey={sortKey}
+            sortOrder={sortOrder}>Total Income</ColumnHeader>
+          <ColumnHeader
+            columnKey='averageIncome'
+            onClick={this.changeSorting}
+            sortKey={sortKey}
+            sortOrder={sortOrder}>Average Income</ColumnHeader>
+          <ColumnHeader
+            columnKey='lastMonthIncome'
+            onClick={this.changeSorting}
+            sortKey={sortKey}
+            sortOrder={sortOrder}>Last month income</ColumnHeader>
+          {/* </thead> */}
           <tbody>
-            {this.sortedCompanies().map(company =>
+            {this.sortedCompanies().filter(this.isRowForCurrentPage).map(company =>
               <CompanyRow company={company} key={company.id} />
             )}
           </tbody>
         </table>
+        <div className="pagination">
+          <div onClick={this.goToPreviousPage}>&laquo;</div>
+          {paginationsButtons.map((_, index) =>
+            <div className='pagination-button'
+              onClick={(e) => this.changePage(e)}
+              data-index-number={index}
+              key={index}>{index}</div>
+          )}
+          <div onClick={this.goToNextPage}>&raquo;</div>
+        </div>
       </>
     );
   }
