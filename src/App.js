@@ -137,7 +137,8 @@ class App extends Component {
 
   handleSearchBox = (e) => {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
+      currentPage: 0
     })
   }
 
@@ -160,8 +161,14 @@ class App extends Component {
 
   render() {
     const { sortKey, sortOrder } = this.state
-    const numberOfPaginationButtons = Math.ceil(this.state.companies.length / this.state.rowsPerPage)
+
+    const sortedAndFilteredCompanies = this.sortedCompanies()
+      .filter(this.isCompanyContainingInput)
+
+    const numberOfPaginationButtons = Math.ceil(sortedAndFilteredCompanies.length / this.state.rowsPerPage)
     const paginationsButtons = new Array(numberOfPaginationButtons).fill(true)
+    console.log(sortedAndFilteredCompanies.length);
+
 
     return (
       <>
@@ -200,10 +207,8 @@ class App extends Component {
             sortOrder={sortOrder}>Last month income</ColumnHeader>
           {/* </thead> */}
           <tbody>
-            {this
-              .sortedCompanies()
+            {sortedAndFilteredCompanies
               .filter(this.isCompanyForCurrentPage)
-              .filter(this.isCompanyContainingInput)
               .map(company =>
                 <CompanyRow company={company} key={company.id} />
               )}
@@ -215,7 +220,7 @@ class App extends Component {
             <div className={`pagination-button ${this.state.currentPage === index ? 'selected' : ''}`}
               onClick={this.changePage}
               data-index-number={index}
-              key={index}>{index}</div>
+              key={index}>{index + 1}</div>
           )}
           <div onClick={this.goToNextPage}>&raquo;</div>
         </div>
