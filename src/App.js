@@ -32,6 +32,7 @@ function isDateFromLastMonth(date) {
 class App extends Component {
   state = {
     dataFetched: false,
+    searchBox: '',
     companies: [],
     rowsPerPage: 20,
     currentPage: 0,
@@ -111,7 +112,7 @@ class App extends Component {
     this.setState({ currentPage: Number(e.target.dataset.indexNumber) })
   }
 
-  isRowForCurrentPage = (_, index) => {
+  isCompanyForCurrentPage = (_, index) => {
 
     const { currentPage, rowsPerPage } = this.state
     if (index >= currentPage * rowsPerPage && index < currentPage * rowsPerPage + rowsPerPage)
@@ -133,6 +134,30 @@ class App extends Component {
     if (currentPage === 0) return
     this.setState({ currentPage: currentPage - 1 })
   }
+
+  handleSearchBox = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
+
+  isCompanyContainingInput = (company) => {
+    const { searchBox } = this.state
+    const trimmedSearchBox = searchBox.trim()
+    const regex = new RegExp(trimmedSearchBox, "i");
+    if (!trimmedSearchBox) return true
+
+    for (let key in company) {
+      let testKeyValue = company[key]
+      if (typeof company[key] === 'number')
+        testKeyValue = company[key].toFixed(2)
+
+      if (regex.test(testKeyValue))
+        return true
+    }
+    return false
+  }
+
   render() {
     const { sortKey, sortOrder } = this.state
     const numberOfPaginationButtons = Math.ceil(this.state.companies.length / this.state.rowsPerPage)
@@ -140,6 +165,7 @@ class App extends Component {
 
     return (
       <>
+        <input name='searchBox' value={this.state.searchBox} onChange={this.handleSearchBox} type="text" />
         <table>
           {/* <thead> */}
           <ColumnHeader
@@ -174,16 +200,20 @@ class App extends Component {
             sortOrder={sortOrder}>Last month income</ColumnHeader>
           {/* </thead> */}
           <tbody>
-            {this.sortedCompanies().filter(this.isRowForCurrentPage).map(company =>
-              <CompanyRow company={company} key={company.id} />
-            )}
+            {this
+              .sortedCompanies()
+              .filter(this.isCompanyForCurrentPage)
+              .filter(this.isCompanyContainingInput)
+              .map(company =>
+                <CompanyRow company={company} key={company.id} />
+              )}
           </tbody>
         </table>
         <div className="pagination">
           <div onClick={this.goToPreviousPage}>&laquo;</div>
           {paginationsButtons.map((_, index) =>
-            <div className='pagination-button'
-              onClick={(e) => this.changePage(e)}
+            <div className={`pagination-button ${this.state.currentPage === index ? 'selected' : ''}`}
+              onClick={this.changePage}
               data-index-number={index}
               key={index}>{index}</div>
           )}
