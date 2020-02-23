@@ -107,8 +107,6 @@ class App extends Component {
   }
 
   changePage = (e) => {
-    console.log(e);
-
     this.setState({ currentPage: Number(e.target.dataset.indexNumber) })
   }
 
@@ -159,6 +157,61 @@ class App extends Component {
     return false
   }
 
+  changeRowsPerPage = (e) => {
+    this.setState({ rowsPerPage: e.target.value })
+  }
+
+  goToPage(number) {
+    this.setState({ currentPage: number })
+  }
+
+
+  buildPaginationArray = (numberOfPaginationButtons) => {
+    const { currentPage } = this.state
+    const buttonsArr = []
+    const firstPage = <div onClick={() => this.goToPage(0)}>{'|<'}</div>
+    const lastPage = <div onClick={() => this.goToPage(numberOfPaginationButtons)}>>|</div>
+    const previousPage = <div onClick={this.goToPreviousPage}>&laquo;</div>
+    const nextPage = <div onClick={this.goToNextPage}>&raquo;</div>
+    const ellipsis = <div>...</div>
+
+    if (numberOfPaginationButtons < 2) return buttonsArr
+
+    buttonsArr.push(firstPage, previousPage)
+
+    for (let i = 0; i < numberOfPaginationButtons; i++) {
+      const button = <div className={`pagination-button ${currentPage === i ? 'selected' : ''}`}
+        onClick={this.changePage}
+        data-index-number={i}
+        key={i}>{i + 1}</div>
+
+      if (numberOfPaginationButtons < 8) {
+        buttonsArr.push(button)
+      }
+      else if (i === 0 || i === numberOfPaginationButtons - 1) {
+        buttonsArr.push(button)
+      }
+      else if (currentPage < 4) {
+        if (i < 5) buttonsArr.push(button)
+        else if (i === 5) buttonsArr.push(ellipsis)
+      }
+      else if (currentPage > numberOfPaginationButtons - 4) {
+        if (i > numberOfPaginationButtons - 6) buttonsArr.push(button)
+        else if (i === numberOfPaginationButtons - 6) buttonsArr.push(ellipsis)
+      }
+      else if (i > currentPage - 2 && i < currentPage + 2) {
+        buttonsArr.push(button)
+      }
+      else if (i === currentPage - 2 || i === currentPage + 2)
+        buttonsArr.push(ellipsis)
+
+
+    }
+
+    buttonsArr.push(nextPage, lastPage)
+    return buttonsArr
+  }
+
   render() {
     const { sortKey, sortOrder } = this.state
 
@@ -172,7 +225,15 @@ class App extends Component {
 
     return (
       <>
-        <input name='searchBox' value={this.state.searchBox} onChange={this.handleSearchBox} type="text" />
+        <label for="rowsPerPage">Results per page:</label>
+
+        <select onChange={this.changeRowsPerPage} id="rowsPerPage">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+        <input placeholder='&#x1F50E;' name='searchBox' value={this.state.searchBox} onChange={this.handleSearchBox} type="text" />
         <table>
           {/* <thead> */}
           <ColumnHeader
@@ -215,14 +276,7 @@ class App extends Component {
           </tbody>
         </table>
         <div className="pagination">
-          <div onClick={this.goToPreviousPage}>&laquo;</div>
-          {paginationsButtons.map((_, index) =>
-            <div className={`pagination-button ${this.state.currentPage === index ? 'selected' : ''}`}
-              onClick={this.changePage}
-              data-index-number={index}
-              key={index}>{index + 1}</div>
-          )}
-          <div onClick={this.goToNextPage}>&raquo;</div>
+          {this.buildPaginationArray(numberOfPaginationButtons)}
         </div>
       </>
     );
