@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import CompanyRow from './CompanyRow'
 import ColumnHeader from './ColumnHeader'
+import Pagination from './Pagination'
+
 import './App.css';
 
 function calculateTotalIncome(incomes) {
@@ -12,13 +14,14 @@ function selectLastMonthIncomes(incomes) {
 }
 
 function isDateFromLastMonth(date) {
-  const today = new Date()
-  const currentMonth = today.getMonth()
-  const currentYear = today.getFullYear()
-  const dateMonth = date.getMonth()
-  const dateYear = date.getFullYear()
-  const sameYear = currentYear === dateYear
-  const previousYear = dateYear === currentYear - 1
+  const
+    today = new Date(),
+    currentMonth = today.getMonth(),
+    currentYear = today.getFullYear(),
+    dateMonth = date.getMonth(),
+    dateYear = date.getFullYear(),
+    sameYear = currentYear === dateYear,
+    previousYear = dateYear === currentYear - 1
 
   if (sameYear) {
     return dateMonth === currentMonth - 1
@@ -95,19 +98,11 @@ class App extends Component {
 
   changeSorting = (columnKey) => {
     this.setState({ currentPage: 0 })
-    // const newSortOrder = {
-    //   'ascending':'descending',
-    //   'descending':'ascending',
-    // }
 
     if (this.state.sortKey === columnKey)
       this.setState({ sortOrder: this.state.sortOrder === 'ascending' ? 'descending' : 'ascending' })
     else
       this.setState({ sortKey: columnKey })
-  }
-
-  changePage = (e) => {
-    this.setState({ currentPage: Number(e.target.dataset.indexNumber) })
   }
 
   isCompanyForCurrentPage = (_, index) => {
@@ -117,20 +112,6 @@ class App extends Component {
       return true
     else
       return false
-  }
-
-  goToNextPage = () => {
-    const { currentPage } = this.state
-    const lastPage = Math.ceil(this.state.companies.length / this.state.rowsPerPage) - 1
-
-    if (currentPage === lastPage) return
-    this.setState({ currentPage: currentPage + 1 })
-  }
-
-  goToPreviousPage = () => {
-    const { currentPage } = this.state
-    if (currentPage === 0) return
-    this.setState({ currentPage: currentPage - 1 })
   }
 
   handleSearchBox = (e) => {
@@ -161,67 +142,18 @@ class App extends Component {
     this.setState({ rowsPerPage: e.target.value })
   }
 
-  goToPage(number) {
-    this.setState({ currentPage: number })
-  }
-
-
-  buildPaginationArray = (numberOfPaginationButtons) => {
-    const { currentPage } = this.state
-    const buttonsArr = []
-    const firstPage = <div onClick={() => this.goToPage(0)}>{'|<'}</div>
-    const lastPage = <div onClick={() => this.goToPage(numberOfPaginationButtons)}>>|</div>
-    const previousPage = <div onClick={this.goToPreviousPage}>&laquo;</div>
-    const nextPage = <div onClick={this.goToNextPage}>&raquo;</div>
-    const ellipsis = <div>...</div>
-
-    if (numberOfPaginationButtons < 2) return buttonsArr
-
-    buttonsArr.push(firstPage, previousPage)
-
-    for (let i = 0; i < numberOfPaginationButtons; i++) {
-      const button = <div className={`pagination-button ${currentPage === i ? 'selected' : ''}`}
-        onClick={this.changePage}
-        data-index-number={i}
-        key={i}>{i + 1}</div>
-
-      if (numberOfPaginationButtons < 8) {
-        buttonsArr.push(button)
-      }
-      else if (i === 0 || i === numberOfPaginationButtons - 1) {
-        buttonsArr.push(button)
-      }
-      else if (currentPage < 4) {
-        if (i < 5) buttonsArr.push(button)
-        else if (i === 5) buttonsArr.push(ellipsis)
-      }
-      else if (currentPage > numberOfPaginationButtons - 4) {
-        if (i > numberOfPaginationButtons - 6) buttonsArr.push(button)
-        else if (i === numberOfPaginationButtons - 6) buttonsArr.push(ellipsis)
-      }
-      else if (i > currentPage - 2 && i < currentPage + 2) {
-        buttonsArr.push(button)
-      }
-      else if (i === currentPage - 2 || i === currentPage + 2)
-        buttonsArr.push(ellipsis)
-
-
-    }
-
-    buttonsArr.push(nextPage, lastPage)
-    return buttonsArr
+  goToPage = (index, numberOfPaginationButtons) => {
+    if (index < 0 || index > numberOfPaginationButtons - 1) return
+    this.setState({ currentPage: index })
   }
 
   render() {
-    const { sortKey, sortOrder } = this.state
+    const { sortKey, sortOrder, currentPage } = this.state
 
     const sortedAndFilteredCompanies = this.sortedCompanies()
       .filter(this.isCompanyContainingInput)
 
     const numberOfPaginationButtons = Math.ceil(sortedAndFilteredCompanies.length / this.state.rowsPerPage)
-    const paginationsButtons = new Array(numberOfPaginationButtons).fill(true)
-    console.log(sortedAndFilteredCompanies.length);
-
 
     return (
       <>
@@ -235,38 +167,38 @@ class App extends Component {
         </select>
         <input placeholder='&#x1F50E;' name='searchBox' value={this.state.searchBox} onChange={this.handleSearchBox} type="text" />
         <table>
-          {/* <thead> */}
-          <ColumnHeader
-            columnKey='id'
-            onClick={this.changeSorting}
-            sortKey={sortKey}
-            sortOrder={sortOrder}>Id</ColumnHeader>
-          <ColumnHeader
-            columnKey='name'
-            onClick={this.changeSorting}
-            sortKey={sortKey}
-            sortOrder={sortOrder}>Name</ColumnHeader>
-          <ColumnHeader
-            columnKey='city'
-            onClick={this.changeSorting}
-            sortKey={sortKey}
-            sortOrder={sortOrder}>City</ColumnHeader>
-          <ColumnHeader
-            columnKey='totalIncome'
-            onClick={this.changeSorting}
-            sortKey={sortKey}
-            sortOrder={sortOrder}>Total Income</ColumnHeader>
-          <ColumnHeader
-            columnKey='averageIncome'
-            onClick={this.changeSorting}
-            sortKey={sortKey}
-            sortOrder={sortOrder}>Average Income</ColumnHeader>
-          <ColumnHeader
-            columnKey='lastMonthIncome'
-            onClick={this.changeSorting}
-            sortKey={sortKey}
-            sortOrder={sortOrder}>Last month income</ColumnHeader>
-          {/* </thead> */}
+          <thead>
+            <ColumnHeader
+              columnKey='id'
+              onClick={this.changeSorting}
+              sortKey={sortKey}
+              sortOrder={sortOrder}>Id</ColumnHeader>
+            <ColumnHeader
+              columnKey='name'
+              onClick={this.changeSorting}
+              sortKey={sortKey}
+              sortOrder={sortOrder}>Name</ColumnHeader>
+            <ColumnHeader
+              columnKey='city'
+              onClick={this.changeSorting}
+              sortKey={sortKey}
+              sortOrder={sortOrder}>City</ColumnHeader>
+            <ColumnHeader
+              columnKey='totalIncome'
+              onClick={this.changeSorting}
+              sortKey={sortKey}
+              sortOrder={sortOrder}>Total Income</ColumnHeader>
+            <ColumnHeader
+              columnKey='averageIncome'
+              onClick={this.changeSorting}
+              sortKey={sortKey}
+              sortOrder={sortOrder}>Average Income</ColumnHeader>
+            <ColumnHeader
+              columnKey='lastMonthIncome'
+              onClick={this.changeSorting}
+              sortKey={sortKey}
+              sortOrder={sortOrder}>Last month income</ColumnHeader>
+          </thead>
           <tbody>
             {sortedAndFilteredCompanies
               .filter(this.isCompanyForCurrentPage)
@@ -275,9 +207,11 @@ class App extends Component {
               )}
           </tbody>
         </table>
-        <div className="pagination">
-          {this.buildPaginationArray(numberOfPaginationButtons)}
-        </div>
+        <Pagination
+          goToPage={this.goToPage}
+          currentPage={currentPage}
+          numberOfPaginationButtons={numberOfPaginationButtons} />
+
       </>
     );
   }
