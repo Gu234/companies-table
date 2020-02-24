@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ARROWS = { ascending: '▲', descending: '▼' }
+const ARROWS = { '1': '▲', '-1': '▼' }
 
 export default function ({ onClick, columnKey, children, sortKey, sortOrder }) {
     const isSelected = sortKey === columnKey

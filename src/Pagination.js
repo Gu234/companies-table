@@ -1,59 +1,59 @@
 import React from 'react';
 
-function buildPaginationButton(i, goToPage, currentPage, numberOfPaginationButtons) {
+function buildPaginationButton(i, goToPage, currentPage, numberOfPages) {
     return <div className={`pagination-button ${currentPage === i ? 'selected' : ''}`}
-        onClick={() => goToPage(i, numberOfPaginationButtons)}
+        onClick={() => goToPage(i, numberOfPages)}
         key={i}>{i + 1}</div>
 }
 
-function buildPaginationArray(numberOfPaginationButtons, currentPage, goToPage) {
+function buildPaginationArray(numberOfPages, currentPage, goToPage) {
     const
-        buttonsArr = [],
+        buttons = [],
         firstPage = <div key={'a'} onClick={() => goToPage(0)}>{'|<'}</div>,
-        lastPage = <div key={'b'} onClick={() => goToPage(numberOfPaginationButtons - 1, numberOfPaginationButtons)}>>|</div>,
-        previousPage = <div key={'c'} onClick={() => goToPage(currentPage - 1, numberOfPaginationButtons)}>&laquo;</div>,
-        nextPage = <div key={'d'} onClick={() => goToPage(currentPage + 1, numberOfPaginationButtons)}>&raquo;</div>,
-        leftEllipsis = <div key={'e'} onClick={() => goToPage(currentPage - 2, numberOfPaginationButtons)}>...</div>,
-        rightEllipsis = <div key={'f'} onClick={() => goToPage(currentPage + 2, numberOfPaginationButtons)}>...</div>
+        lastPage = <div key={'b'} onClick={() => goToPage(numberOfPages - 1, numberOfPages)}>>|</div>,
+        previousPage = <div key={'c'} onClick={() => goToPage(currentPage - 1, numberOfPages)}>&laquo;</div>,
+        nextPage = <div key={'d'} onClick={() => goToPage(currentPage + 1, numberOfPages)}>&raquo;</div>,
+        leftEllipsis = <div key={'e'} onClick={() => goToPage(currentPage - 2, numberOfPages)}>...</div>,
+        rightEllipsis = <div key={'f'} onClick={() => goToPage(currentPage + 2, numberOfPages)}>...</div>
 
-    if (numberOfPaginationButtons < 2) return buttonsArr
+    if (numberOfPages < 2) return buttons
 
-    buttonsArr.push(firstPage, previousPage)
+    buttons.push(firstPage, previousPage)
 
-    for (let i = 0; i < numberOfPaginationButtons; i++) {
-        const button = buildPaginationButton(i, goToPage, currentPage, numberOfPaginationButtons)
+    for (let i = 0; i < numberOfPages; i++) {
+        const button = buildPaginationButton(i, goToPage, currentPage, numberOfPages)
 
-        if (numberOfPaginationButtons < 8) {
-            buttonsArr.push(button)
+        if (numberOfPages < 8) {
+            buttons.push(button)
         }
-        else if (i === 0 || i === numberOfPaginationButtons - 1) {
-            buttonsArr.push(button)
+        else if (i === 0 || i === numberOfPages - 1) {
+            buttons.push(button)
         }
         else if (currentPage < 4) {
-            if (i < 5) buttonsArr.push(button)
-            else if (i === 5) buttonsArr.push(rightEllipsis)
+            if (i < 5) buttons.push(button)
+            else if (i === 5) buttons.push(rightEllipsis)
         }
-        else if (currentPage > numberOfPaginationButtons - 4) {
-            if (i > numberOfPaginationButtons - 6) buttonsArr.push(button)
-            else if (i === numberOfPaginationButtons - 6) buttonsArr.push(leftEllipsis)
+        else if (currentPage > numberOfPages - 4) {
+            if (i > numberOfPages - 6) buttons.push(button)
+            else if (i === numberOfPages - 6) buttons.push(leftEllipsis)
         }
         else if (i > currentPage - 2 && i < currentPage + 2) {
-            buttonsArr.push(button)
+            buttons.push(button)
         }
         else if (i === currentPage - 2)
-            buttonsArr.push(leftEllipsis)
+            buttons.push(leftEllipsis)
         else if (i === currentPage + 2)
-            buttonsArr.push(rightEllipsis)
+            buttons.push(rightEllipsis)
     }
 
-    buttonsArr.push(nextPage, lastPage)
-    return buttonsArr
+    buttons.push(nextPage, lastPage)
+    return buttons
 }
 
-export default function ({ goToPage, numberOfPaginationButtons, currentPage }) {
+export default function ({ goToPage, numberOfPages, currentPage }) {
     return (
         <div className="pagination">
-            {buildPaginationArray(numberOfPaginationButtons, currentPage, goToPage)}
+            {buildPaginationArray(numberOfPages, currentPage, goToPage)}
         </div>
     )
 }

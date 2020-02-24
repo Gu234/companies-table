@@ -1,7 +1,6 @@
 import React from 'react';
 
 export default function ({ company }) {
-    // TODO: use regionalization to format number
     return (
         <tr>
             <td>{company.id}</td>

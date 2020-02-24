@@ -35,12 +35,13 @@ function isDateFromLastMonth(date) {
 class App extends Component {
   state = {
     dataFetched: false,
-    searchBox: '',
+    searchTerm: '',
     companies: [],
     rowsPerPage: 20,
     currentPage: 0,
     sortKey: 'id',
-    sortOrder: 'ascending'
+    // sort order 1 = ascending , -1 = descending
+    sortOrder: 1
   }
 
   async componentDidMount() {
@@ -72,23 +73,18 @@ class App extends Component {
   getSortingFunction() {
     const { sortKey, sortOrder } = this.state
 
-    const newSortOrder = {
-      'ascending': 1,
-      'descending': -1
-    }
-
     if (sortKey === 'city' || sortKey === 'name') {
       return (companyA, companyB) => {
         if (companyA[sortKey] < companyB[sortKey]
         )
-          return -1 * newSortOrder[sortOrder]
+          return -sortOrder
         else
-          return 1 * newSortOrder[sortOrder]
+          return sortOrder
       }
     }
 
     else
-      return (companyA, companyB) => (companyA[sortKey] - companyB[sortKey]) * newSortOrder[sortOrder]
+      return (companyA, companyB) => (companyA[sortKey] - companyB[sortKey]) * sortOrder
   }
 
   sortedCompanies() {
@@ -100,32 +96,23 @@ class App extends Component {
     this.setState({ currentPage: 0 })
 
     if (this.state.sortKey === columnKey)
-      this.setState({ sortOrder: this.state.sortOrder === 'ascending' ? 'descending' : 'ascending' })
+      this.setState({ sortOrder: -this.state.sortOrder })
     else
-      this.setState({ sortKey: columnKey })
+      this.setState({ sortKey: columnKey, sortOrder: 1 })
   }
 
-  isCompanyForCurrentPage = (_, index) => {
-
-    const { currentPage, rowsPerPage } = this.state
-    if (index >= currentPage * rowsPerPage && index < currentPage * rowsPerPage + rowsPerPage)
-      return true
-    else
-      return false
-  }
-
-  handleSearchBox = (e) => {
+  handleSearchTerm = (e) => {
     this.setState({
       [e.target.name]: e.target.value,
       currentPage: 0
     })
   }
 
-  isCompanyContainingInput = (company) => {
-    const { searchBox } = this.state
-    const trimmedSearchBox = searchBox.trim()
-    const regex = new RegExp(trimmedSearchBox, "i");
-    if (!trimmedSearchBox) return true
+  isCompanyMatchingSearchTerm = (company) => {
+    const { searchTerm } = this.state
+    const trimmedSearchTerm = searchTerm.trim()
+    const regex = new RegExp(trimmedSearchTerm, "i");
+    if (!trimmedSearchTerm) return true
 
     for (let key in company) {
       let testKeyValue = company[key]
@@ -139,69 +126,72 @@ class App extends Component {
   }
 
   changeRowsPerPage = (e) => {
-    this.setState({ rowsPerPage: e.target.value })
+    this.setState({ rowsPerPage: Number(e.target.value), currentPage: 0 })
   }
 
-  goToPage = (index, numberOfPaginationButtons) => {
-    if (index < 0 || index > numberOfPaginationButtons - 1) return
+  goToPage = (index, numberOfPages) => {
+    if (index < 0 || index > numberOfPages - 1) return
     this.setState({ currentPage: index })
   }
 
   render() {
-    const { sortKey, sortOrder, currentPage } = this.state
+    const { sortKey, sortOrder, currentPage, rowsPerPage } = this.state
 
     const sortedAndFilteredCompanies = this.sortedCompanies()
-      .filter(this.isCompanyContainingInput)
+      .filter(this.isCompanyMatchingSearchTerm)
 
-    const numberOfPaginationButtons = Math.ceil(sortedAndFilteredCompanies.length / this.state.rowsPerPage)
+    const numberOfPages = Math.ceil(sortedAndFilteredCompanies.length / this.state.rowsPerPage)
 
     return (
       <>
-        <label for="rowsPerPage">Results per page:</label>
+        <label htmlFor="rowsPerPage">Results per page:</label>
 
-        <select onChange={this.changeRowsPerPage} id="rowsPerPage">
-          <option value="10">10</option>
-          <option value="25">25</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
+        <select defaultValue={20} onChange={this.changeRowsPerPage} id="rowsPerPage">
+          <option value={10}>10</option>
+          <option value={20}>20</option>
+          <option value={50}>50</option>
+          <option value={100}>100</option>
         </select>
-        <input placeholder='&#x1F50E;' name='searchBox' value={this.state.searchBox} onChange={this.handleSearchBox} type="text" />
+        <input placeholder='&#x1F50E;' name='searchTerm' value={this.state.searchTerm} onChange={this.handleSearchTerm} type="text" />
         <table>
           <thead>
-            <ColumnHeader
-              columnKey='id'
-              onClick={this.changeSorting}
-              sortKey={sortKey}
-              sortOrder={sortOrder}>Id</ColumnHeader>
-            <ColumnHeader
-              columnKey='name'
-              onClick={this.changeSorting}
-              sortKey={sortKey}
-              sortOrder={sortOrder}>Name</ColumnHeader>
-            <ColumnHeader
-              columnKey='city'
-              onClick={this.changeSorting}
-              sortKey={sortKey}
-              sortOrder={sortOrder}>City</ColumnHeader>
-            <ColumnHeader
-              columnKey='totalIncome'
-              onClick={this.changeSorting}
-              sortKey={sortKey}
-              sortOrder={sortOrder}>Total Income</ColumnHeader>
-            <ColumnHeader
-              columnKey='averageIncome'
-              onClick={this.changeSorting}
-              sortKey={sortKey}
-              sortOrder={sortOrder}>Average Income</ColumnHeader>
-            <ColumnHeader
-              columnKey='lastMonthIncome'
-              onClick={this.changeSorting}
-              sortKey={sortKey}
-              sortOrder={sortOrder}>Last month income</ColumnHeader>
+            <tr>
+
+              <ColumnHeader
+                columnKey='id'
+                onClick={this.changeSorting}
+                sortKey={sortKey}
+                sortOrder={sortOrder}>Id</ColumnHeader>
+              <ColumnHeader
+                columnKey='name'
+                onClick={this.changeSorting}
+                sortKey={sortKey}
+                sortOrder={sortOrder}>Name</ColumnHeader>
+              <ColumnHeader
+                columnKey='city'
+                onClick={this.changeSorting}
+                sortKey={sortKey}
+                sortOrder={sortOrder}>City</ColumnHeader>
+              <ColumnHeader
+                columnKey='totalIncome'
+                onClick={this.changeSorting}
+                sortKey={sortKey}
+                sortOrder={sortOrder}>Total Income</ColumnHeader>
+              <ColumnHeader
+                columnKey='averageIncome'
+                onClick={this.changeSorting}
+                sortKey={sortKey}
+                sortOrder={sortOrder}>Average Income</ColumnHeader>
+              <ColumnHeader
+                columnKey='lastMonthIncome'
+                onClick={this.changeSorting}
+                sortKey={sortKey}
+                sortOrder={sortOrder}>Last month income</ColumnHeader>
+            </tr>
           </thead>
           <tbody>
             {sortedAndFilteredCompanies
-              .filter(this.isCompanyForCurrentPage)
+              .slice(currentPage * rowsPerPage, currentPage * rowsPerPage + rowsPerPage)
               .map(company =>
                 <CompanyRow company={company} key={company.id} />
               )}
@@ -210,7 +200,7 @@ class App extends Component {
         <Pagination
           goToPage={this.goToPage}
           currentPage={currentPage}
-          numberOfPaginationButtons={numberOfPaginationButtons} />
+          numberOfPages={numberOfPages} />
 
       </>
     );
