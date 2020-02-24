@@ -1,0 +1,129 @@
+*{
+    // border: 1px dashed black;
+}
+
+.container{
+    max-width: 1000px;
+    margin: 50px auto;
+}
+
+.column-header{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: rgb(73, 73, 73);
+    color: white;
+}
+
+.highlighted{
+    background-color: rgb(245, 245, 245);
+}
+
+tr:nth-of-type(even){
+    background-color: lightgray;
+    .highlighted{
+        background-color: rgb(196, 196, 196);
+    }
+}
+
+.table{
+    margin:auto;
+    width: 100%;
+    td{
+        padding: 5px;
+    }
+}
+
+.numeric{
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    // padding-right: 5px;
+}
+
+.pagination{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    div{
+        width: 20px;
+        height: 20px;
+        align-items: center;
+        // border: 1px solid black;
+        display: inline-block;
+        padding: 5px;
+        text-align: center;
+        margin: 5px;
+        user-select: none; 
+        background-size: contain;
+        background-position: center;
+        &:hover{
+            color: black;
+            cursor: pointer;
+            background-color: lightgray;
+        }
+    }
+    .next-page{
+        background-image: url(./assets/right-arrow.svg) ;
+        &:hover{
+            background-color: transparent;
+        }
+    }
+    .previous-page{
+        background-image:url(./assets/left-arrow.svg) ;
+        &:hover{
+            background-color: transparent;
+        }
+    }
+    .last-page{
+        background-image:url(./assets/end-arrow.svg) ;
+        &:hover{
+            background-color: transparent;
+        }
+    }
+    .first-page{
+        background-image:url(./assets/begin-arrow.svg) ;
+        &:hover{
+            background-color: transparent;
+        }
+    }    
+}
+
+
+
+.selected{
+    color: white;
+    background-color: rgb(73, 73, 73);
+
+}
+
+.inputs{
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+    .inputs-searchBox{
+        width: 40%;
+        input{
+            width: 100%;
+            font-size: 20px;
+            padding: 5px;
+            padding-left: 10px;
+        }
+    }
+    .inputs-rowsPerPage{
+        display: flex;
+        align-items: center;
+        background-color: rgb(73, 73, 73);
+        padding: 5px;
+
+        label{
+            padding: 5px;
+            margin-right: 5px;
+            font-weight: bold;
+            color: white;
+        }
+        select{
+            font-size: 16px;
+        }
+    }
+}

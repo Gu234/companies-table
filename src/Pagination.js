@@ -9,10 +9,10 @@ function buildPaginationButton(i, goToPage, currentPage, numberOfPages) {
 function buildPaginationArray(numberOfPages, currentPage, goToPage) {
     const
         buttons = [],
-        firstPage = <div key={'a'} onClick={() => goToPage(0)}>{'|<'}</div>,
-        lastPage = <div key={'b'} onClick={() => goToPage(numberOfPages - 1, numberOfPages)}>>|</div>,
-        previousPage = <div key={'c'} onClick={() => goToPage(currentPage - 1, numberOfPages)}>&laquo;</div>,
-        nextPage = <div key={'d'} onClick={() => goToPage(currentPage + 1, numberOfPages)}>&raquo;</div>,
+        firstPage = <div className='first-page' key={'a'} onClick={() => goToPage(0)}></div>,
+        lastPage = <div className='last-page' key={'b'} onClick={() => goToPage(numberOfPages - 1, numberOfPages)}></div>,
+        previousPage = <div className='previous-page' key={'c'} onClick={() => goToPage(currentPage - 1, numberOfPages)}></div>,
+        nextPage = <div className='next-page' key={'d'} onClick={() => goToPage(currentPage + 1, numberOfPages)}></div>,
         leftEllipsis = <div key={'e'} onClick={() => goToPage(currentPage - 2, numberOfPages)}>...</div>,
         rightEllipsis = <div key={'f'} onClick={() => goToPage(currentPage + 2, numberOfPages)}>...</div>
 

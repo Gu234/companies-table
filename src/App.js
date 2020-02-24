@@ -3,7 +3,7 @@ import CompanyRow from './CompanyRow'
 import ColumnHeader from './ColumnHeader'
 import Pagination from './Pagination'
 
-import './App.css';
+import './App.scss';
 
 function calculateTotalIncome(incomes) {
   return incomes.reduce(((sum, income) => sum + Number(income.value)), 0)
@@ -144,64 +144,74 @@ class App extends Component {
 
     return (
       <>
-        <label htmlFor="rowsPerPage">Results per page:</label>
+        <div className="container">
+          <div className="inputs">
+            <div className="inputs-searchBox">
+              <input placeholder='&#x1F50E;' name='searchTerm' value={this.state.searchTerm} onChange={this.handleSearchTerm} type="text" />
+            </div>
+            <div className="inputs-rowsPerPage">
+              <label htmlFor="rowsPerPage">Results per page</label>
 
-        <select defaultValue={20} onChange={this.changeRowsPerPage} id="rowsPerPage">
-          <option value={10}>10</option>
-          <option value={20}>20</option>
-          <option value={50}>50</option>
-          <option value={100}>100</option>
-        </select>
-        <input placeholder='&#x1F50E;' name='searchTerm' value={this.state.searchTerm} onChange={this.handleSearchTerm} type="text" />
-        <table>
-          <thead>
-            <tr>
+              <select defaultValue={20} onChange={this.changeRowsPerPage} id="rowsPerPage">
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+            </div>
+          </div>
+          <table className='table'>
+            <thead>
+              <tr>
+                <ColumnHeader
+                  columnKey='id'
+                  onClick={this.changeSorting}
+                  sortKey={sortKey}
+                  sortOrder={sortOrder}>Id</ColumnHeader>
+                <ColumnHeader
+                  columnKey='name'
+                  onClick={this.changeSorting}
+                  sortKey={sortKey}
+                  sortOrder={sortOrder}>Name</ColumnHeader>
+                <ColumnHeader
+                  columnKey='city'
+                  onClick={this.changeSorting}
+                  sortKey={sortKey}
+                  sortOrder={sortOrder}>City</ColumnHeader>
+                <ColumnHeader
+                  columnKey='totalIncome'
+                  onClick={this.changeSorting}
+                  sortKey={sortKey}
+                  sortOrder={sortOrder}>Total Income</ColumnHeader>
+                <ColumnHeader
+                  columnKey='averageIncome'
+                  onClick={this.changeSorting}
+                  sortKey={sortKey}
+                  sortOrder={sortOrder}>Average Income</ColumnHeader>
+                <ColumnHeader
+                  columnKey='lastMonthIncome'
+                  onClick={this.changeSorting}
+                  sortKey={sortKey}
+                  sortOrder={sortOrder}>Last month income</ColumnHeader>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedAndFilteredCompanies
+                .slice(currentPage * rowsPerPage, currentPage * rowsPerPage + rowsPerPage)
+                .map(company =>
+                  <CompanyRow
+                    sortKey={sortKey}
+                    company={company}
+                    key={company.id} />
+                )}
+            </tbody>
+          </table>
+          <Pagination
+            goToPage={this.goToPage}
+            currentPage={currentPage}
+            numberOfPages={numberOfPages} />
 
-              <ColumnHeader
-                columnKey='id'
-                onClick={this.changeSorting}
-                sortKey={sortKey}
-                sortOrder={sortOrder}>Id</ColumnHeader>
-              <ColumnHeader
-                columnKey='name'
-                onClick={this.changeSorting}
-                sortKey={sortKey}
-                sortOrder={sortOrder}>Name</ColumnHeader>
-              <ColumnHeader
-                columnKey='city'
-                onClick={this.changeSorting}
-                sortKey={sortKey}
-                sortOrder={sortOrder}>City</ColumnHeader>
-              <ColumnHeader
-                columnKey='totalIncome'
-                onClick={this.changeSorting}
-                sortKey={sortKey}
-                sortOrder={sortOrder}>Total Income</ColumnHeader>
-              <ColumnHeader
-                columnKey='averageIncome'
-                onClick={this.changeSorting}
-                sortKey={sortKey}
-                sortOrder={sortOrder}>Average Income</ColumnHeader>
-              <ColumnHeader
-                columnKey='lastMonthIncome'
-                onClick={this.changeSorting}
-                sortKey={sortKey}
-                sortOrder={sortOrder}>Last month income</ColumnHeader>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedAndFilteredCompanies
-              .slice(currentPage * rowsPerPage, currentPage * rowsPerPage + rowsPerPage)
-              .map(company =>
-                <CompanyRow company={company} key={company.id} />
-              )}
-          </tbody>
-        </table>
-        <Pagination
-          goToPage={this.goToPage}
-          currentPage={currentPage}
-          numberOfPages={numberOfPages} />
-
+        </div>
       </>
     );
   }
