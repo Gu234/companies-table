@@ -4,7 +4,7 @@ const ARROWS = { '1': '▲', '-1': '▼' }
 
 export default function ({ onClick, columnKey, children, sortKey, sortOrder }) {
     const isSelected = sortKey === columnKey
-    const arrow = isSelected ? ARROWS[sortOrder] : ''
+    const arrow = isSelected ? ARROWS[sortOrder] : '▼'
 
     return (
         <th onClick={() => onClick(columnKey)}>
@@ -12,7 +12,7 @@ export default function ({ onClick, columnKey, children, sortKey, sortOrder }) {
                 <div>
                     {children}
                 </div>
-                <div>
+                <div className={isSelected ? '' : 'hidden'}>
                     {arrow}
                 </div>
             </div>

@@ -147,7 +147,7 @@ class App extends Component {
         <div className="container">
           <div className="inputs">
             <div className="inputs-searchBox">
-              <input placeholder='&#x1F50E;' name='searchTerm' value={this.state.searchTerm} onChange={this.handleSearchTerm} type="text" />
+              <input placeholder='Search...' name='searchTerm' value={this.state.searchTerm} onChange={this.handleSearchTerm} type="text" />
             </div>
             <div className="inputs-rowsPerPage">
               <label htmlFor="rowsPerPage">Results per page</label>
@@ -192,7 +192,7 @@ class App extends Component {
                   columnKey='lastMonthIncome'
                   onClick={this.changeSorting}
                   sortKey={sortKey}
-                  sortOrder={sortOrder}>Last month income</ColumnHeader>
+                  sortOrder={sortOrder}>Last month Income</ColumnHeader>
               </tr>
             </thead>
             <tbody>
