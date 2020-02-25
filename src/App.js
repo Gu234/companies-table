@@ -40,8 +40,16 @@ class App extends Component {
     rowsPerPage: 20,
     currentPage: 0,
     sortKey: 'id',
-    // sort order 1 = ascending , -1 = descending
-    sortOrder: 1
+    sortOrder: 1,     // sort order 1 = ascending , -1 = descending
+    visibleColumns: {
+      id: true,
+      name: true,
+      city: true,
+      totalIncome: true,
+      averageIncome: true,
+      lastMonthIncome: true
+    },
+    displayButtonDropdownVisibility: false
   }
 
   async componentDidMount() {
@@ -134,8 +142,43 @@ class App extends Component {
     this.setState({ currentPage: index })
   }
 
+  toggleDropdown = (e) => {
+    this.setState({ displayButtonDropdownVisibility: !this.state.displayButtonDropdownVisibility })
+  }
+
+  // Close the dropdown if the user clicks outside of it
+  // window.onclick = function (e) {
+  //   if (!e.target.matches('.dropbtn')) {
+  //     var myDropdown = document.getElementById("myDropdown");
+  //     if (myDropdown.classList.contains('show')) {
+  //       myDropdown.classList.remove('show');
+  //     }
+  //   }
+
+
+
+
+  hideDropdown = (e) => {
+    console.log(e.target)
+
+    if (e.target.matches('.dropbtn')) return
+    if (e.target.matches('.label')) return
+    if (e.target.matches('.checkbox')) return
+    // if you click inside dropdown button do not hide it
+
+    this.setState({ displayButtonDropdownVisibility: false })
+  }
+
+  handleCheckbox = (e) => {
+    console.log(e.target.name)
+    console.log(e.target.value)
+    const new_columns = this.state.visibleColumns
+    new_columns[e.target.name] = e.target.checked
+    this.setState({ visibleColumns: new_columns })
+  }
+
   render() {
-    const { sortKey, sortOrder, currentPage, rowsPerPage } = this.state
+    const { visibleColumns, sortKey, sortOrder, currentPage, rowsPerPage } = this.state
 
     const sortedAndFilteredCompanies = this.sortedCompanies()
       .filter(this.isCompanyMatchingSearchTerm)
@@ -143,11 +186,42 @@ class App extends Component {
     const numberOfPages = Math.ceil(sortedAndFilteredCompanies.length / this.state.rowsPerPage)
 
     return (
-      <>
+      <div onClick={this.hideDropdown}>
         <div className="container">
           <div className="inputs">
             <div className="inputs-searchBox">
-              <input placeholder='Search...' name='searchTerm' value={this.state.searchTerm} onChange={this.handleSearchTerm} type="text" />
+              <input placeholder='Search...' name='searchTerm' maxLength='50' value={this.state.searchTerm} onChange={this.handleSearchTerm} type="text" />
+            </div>
+            <div className="inputs-dropdown">
+              <button className="dropbtn" onClick={this.toggleDropdown}>Display
+              </button>
+              <div className={"dropdown-content " + (this.state.displayButtonDropdownVisibility ? '' : 'no-display')}>
+                <label >
+                  <input type="checkbox" name="id"
+                    checked={this.state.visibleColumns.id}
+                    onChange={this.handleCheckbox} />Id
+                </label>
+                <label >
+                  <input type="checkbox" name="city"
+                    checked={this.state.visibleColumns.city}
+                    onChange={this.handleCheckbox} />City
+                </label>
+                <label >
+                  <input type="checkbox" name="totalIncome"
+                    checked={this.state.visibleColumns.totalIncome}
+                    onChange={this.handleCheckbox} />Total Income
+                </label>
+                <label >
+                  <input type="checkbox" name="averageIncome"
+                    checked={this.state.visibleColumns.averageIncome}
+                    onChange={this.handleCheckbox} />Average Income
+                </label>
+                <label >
+                  <input type="checkbox" name="lastMonthIncome"
+                    checked={this.state.visibleColumns.lastMonthIncome}
+                    onChange={this.handleCheckbox} />Last Month Income
+                </label>
+              </div>
             </div>
             <div className="inputs-rowsPerPage">
               <label htmlFor="rowsPerPage">Results per page</label>
@@ -164,31 +238,37 @@ class App extends Component {
             <thead>
               <tr>
                 <ColumnHeader
+                  visible={visibleColumns.id}
                   columnKey='id'
                   onClick={this.changeSorting}
                   sortKey={sortKey}
                   sortOrder={sortOrder}>Id</ColumnHeader>
                 <ColumnHeader
+                  visible={visibleColumns.name}
                   columnKey='name'
                   onClick={this.changeSorting}
                   sortKey={sortKey}
                   sortOrder={sortOrder}>Name</ColumnHeader>
                 <ColumnHeader
+                  visible={visibleColumns.city}
                   columnKey='city'
                   onClick={this.changeSorting}
                   sortKey={sortKey}
                   sortOrder={sortOrder}>City</ColumnHeader>
                 <ColumnHeader
+                  visible={visibleColumns.totalIncome}
                   columnKey='totalIncome'
                   onClick={this.changeSorting}
                   sortKey={sortKey}
                   sortOrder={sortOrder}>Total Income</ColumnHeader>
                 <ColumnHeader
+                  visible={visibleColumns.averageIncome}
                   columnKey='averageIncome'
                   onClick={this.changeSorting}
                   sortKey={sortKey}
                   sortOrder={sortOrder}>Average Income</ColumnHeader>
                 <ColumnHeader
+                  visible={visibleColumns.lastMonthIncome}
                   columnKey='lastMonthIncome'
                   onClick={this.changeSorting}
                   sortKey={sortKey}
@@ -200,6 +280,7 @@ class App extends Component {
                 .slice(currentPage * rowsPerPage, currentPage * rowsPerPage + rowsPerPage)
                 .map(company =>
                   <CompanyRow
+                    visibleColumns={visibleColumns}
                     sortKey={sortKey}
                     company={company}
                     key={company.id} />
@@ -212,7 +293,7 @@ class App extends Component {
             numberOfPages={numberOfPages} />
 
         </div>
-      </>
+      </div>
     );
   }
 }
