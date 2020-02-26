@@ -13,7 +13,9 @@ data from state is sorted , filtered , sliced and displayed on screen based on c
 
 ## Search box 
 search box is case insensitive
+
 search term is trimmed
+
 changes current page to one
 
 ## Sort 
