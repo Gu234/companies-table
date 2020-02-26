@@ -1,3 +1,29 @@
+Table
+
+## fetch 
+fetching is two-step process 
+fetching from one server 
+based on data, another batch of fetches are sent  to second server
+data is merged, calculated for rows , then set as state 
+
+data from state is sorted , filtered , sliced and displayed on screen based on current user inputs
+
+## search box 
+search box is case insensitive
+search term is trimmed
+changes current page to one
+
+## sort 
+sorting by row highlights it slightly 
+clicking same row changes sort order
+clicking different row resets sort order
+sorting changes current page to one
+
+## pagination
+doesn’t display if there is only one page of results 
+
+-----------------------------------------------------------------
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
