@@ -1,0 +1,35 @@
+.inputs{
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+    .inputs-searchBox{
+        width: 30%;
+        input{
+            background-image: url(../assets/search.svg);
+            background-repeat: no-repeat;
+            background-size: 5%;
+            background-position:  left 5px top 50%;
+            width: 100%;
+            font-size: 20px;
+            padding: 5px;
+            padding-left: 25px;
+        }
+    }
+    .inputs-rowsPerPage{
+        display: flex;
+        align-items: center;
+        background-color: rgb(73, 73, 73);
+        padding: 5px;
+
+        label{
+            padding: 5px;
+            margin-right: 5px;
+            font-weight: bold;
+            color: white;
+        }
+        select{
+            font-size: 16px;
+        }
+    }
+}

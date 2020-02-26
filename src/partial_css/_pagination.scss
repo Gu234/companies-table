@@ -1,0 +1,52 @@
+
+.pagination{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    div{
+        width: 20px;
+        height: 20px;
+        align-items: center;
+        display: inline-block;
+        padding: 5px;
+        text-align: center;
+        margin: 1px;
+        user-select: none; 
+        background-size: contain;
+        background-position: center;
+        &:hover{
+            color: black;
+            cursor: pointer;
+            background-color: lightgray;
+        }
+    }
+    .next-page{
+        background-image: url(../assets/right-arrow.svg) ;
+        background-repeat: no-repeat;
+        &:hover{
+            background-color: transparent;
+        }
+    }
+    .previous-page{
+        background-image:url(../assets/left-arrow.svg) ;
+        background-repeat: no-repeat;
+        &:hover{
+            background-color: transparent;
+        }
+    }
+    .last-page{
+        background-image:url(../assets/end-arrow.svg) ;
+        background-repeat: no-repeat;
+        &:hover{
+            background-color: transparent;
+        }
+    }
+    .first-page{
+        background-image:url(../assets/begin-arrow.svg) ;
+        background-repeat: no-repeat;
+
+        &:hover{
+            background-color: transparent;
+        }
+    }    
+}

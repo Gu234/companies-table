@@ -1,166 +1,22 @@
-@import './palette.scss';
+@import './partial_css/inputs';
+@import './partial_css/pagination';
+@import './partial_css/table';
 
 .container{
     max-width: 1000px;
     margin: 50px auto;
 }
 
-.highlighted{
-    background-color: rgb(245, 245, 245);
-}
-
-tr:nth-of-type(even){
-    background-color: lightgray;
-    .highlighted{
-        background-color: rgb(196, 196, 196);
-    }
-}
 .hidden{
     visibility: hidden;
 }
 
-.table{
-    width: 100%;
-    td{
-        padding: 5px;
-    }
-    thead{
-        tr{
-
-            background-color: rgb(73, 73, 73);
-            th{
-                height: 100%;
-                &:hover{
-                    cursor: pointer;
-                    background-color: rgb(82, 82, 82);
-                }
-                .column-header{
-                    display: flex;
-                    justify-content: space-between;
-                    padding: 10px;
-                    color: white;
-                }
-            }
-            th:nth-child(1){
-                width:55px ;
-            }
-            th:nth-child(2){
-                width:265px ;
-            }
-            th:nth-child(3){
-                width:170px ;
-            }
-            th:nth-child(4){
-                width:135px ;
-            }
-            th:nth-child(5){
-                width:160px ;
-            }
-            th:nth-child(6){
-                width:185px ;
-            }
-        }
-    }
-}
-
-.numeric{
-    font-variant-numeric: tabular-nums;
-    text-align: right;
-}
-
-.pagination{
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-    div{
-        width: 20px;
-        height: 20px;
-        align-items: center;
-        // border: 1px solid black;
-        display: inline-block;
-        padding: 5px;
-        text-align: center;
-        margin: 1px;
-        user-select: none; 
-        background-size: contain;
-        background-position: center;
-        &:hover{
-            color: black;
-            cursor: pointer;
-            background-color: lightgray;
-        }
-    }
-    .next-page{
-        background-image: url(./assets/right-arrow.svg) ;
-        background-repeat: no-repeat;
-        &:hover{
-            background-color: transparent;
-        }
-    }
-    .previous-page{
-        background-image:url(./assets/left-arrow.svg) ;
-        background-repeat: no-repeat;
-        &:hover{
-            background-color: transparent;
-        }
-    }
-    .last-page{
-        background-image:url(./assets/end-arrow.svg) ;
-        background-repeat: no-repeat;
-        &:hover{
-            background-color: transparent;
-        }
-    }
-    .first-page{
-        background-image:url(./assets/begin-arrow.svg) ;
-        background-repeat: no-repeat;
-
-        &:hover{
-            background-color: transparent;
-        }
-    }    
-}
-
-
-
-.selected{
-    color: white;
-    background-color: rgb(73, 73, 73);
-
-}
-
-.inputs{
-    display: flex;
-    justify-content: space-between;
-
-    margin-bottom: 20px;
-    .inputs-searchBox{
-        width: 30%;
-        input{
-            background-image: url(./assets/search.svg);
-            background-repeat: no-repeat;
-            background-size: 5%;
-            background-position:  left 5px top 50%;
-            width: 100%;
-            font-size: 20px;
-            padding: 5px;
-            padding-left: 25px;
-        }
-    }
-    .inputs-rowsPerPage{
-        display: flex;
-        align-items: center;
-        background-color: rgb(73, 73, 73);
-        padding: 5px;
-
-        label{
-            padding: 5px;
-            margin-right: 5px;
-            font-weight: bold;
-            color: white;
-        }
-        select{
-            font-size: 16px;
-        }
-    }
+.loadingGif{
+    position: absolute;
+    top:50%;
+    left:50%;
+    width: 100px;
+    height: 100px;
+    margin-top: -50px; 
+    margin-left: -50px; 
 }
