@@ -4,9 +4,10 @@
 https://gu234.github.io/companies-table/
 
 ## Fetch 
-fetching is two-step process 
 fetching from one server 
+
 based on data, another batch of fetches are sent  to second server
+
 data is merged, calculated for rows , then set as state 
 
 data from state is sorted , filtered , sliced and displayed on screen based on current user inputs
@@ -20,8 +21,11 @@ changes current page to one
 
 ## Sort 
 sorting by row highlights it slightly 
+
 clicking same row changes sort order
+
 clicking different row resets sort order
+
 sorting changes current page to one
 
 ## Pagination
