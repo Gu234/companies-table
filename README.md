@@ -1,7 +1,7 @@
 # Table
 
 ## Preview
-https://github.com/Gu234/companies-table
+https://gu234.github.io/companies-table/
 
 ## Fetch 
 fetching is two-step process 
